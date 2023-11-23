@@ -93,9 +93,7 @@ if __name__ == "__main__":
     enable_ip_route()
     try:
         while True:
-            # telling the `target` that we are the `host`
             spoof(target, host, verbose)
-            # telling the `host` that we are the `target`
             spoof(host, target, verbose)
             # sleep for one second
             time.sleep(1)
