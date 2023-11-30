@@ -1,4 +1,35 @@
 from scapy.all import Ether, ARP, srp, sniff, conf
+import time
+import platform
+import subprocess
+def turn_on_wifi():
+    system_platform = platform.system()
+    if system_platform == "Windows":
+        subprocess.run(["netsh", "interface", "set", "interface", "Wi-Fi", "enable"], capture_output=True, text=True)
+    elif system_platform == "Darwin":  # macOS
+        subprocess.run(["networksetup", "-setairportpower", "en0", "on"], capture_output=True, text=True)
+    elif system_platform == "Linux":
+        # You may need to replace "wlp2s0" with your actual wireless interface name on Linux
+        subprocess.run(["sudo", "ip", "link", "set", "dev", "wlp2s0", "up"], capture_output=True, text=True)
+    else:
+        print("Unsupported operating system")
+        
+def turn_off_wifi():
+    system_platform = platform.system()
+    if system_platform == "Windows":
+        subprocess.run(["netsh", "interface", "set", "interface", "Wi-Fi", "disable"], capture_output=True, text=True)
+    elif system_platform == "Darwin":  # macOS
+        subprocess.run(["networksetup", "-setairportpower", "en0", "off"], capture_output=True, text=True)
+    elif system_platform == "Linux":
+        # You may need to replace "wlp2s0" with your actual wireless interface name on Linux
+        subprocess.run(["sudo", "ip", "link", "set", "dev", "wlp2s0", "down"], capture_output=True, text=True)
+    else:
+        print("Unsupported operating system")
+    try:
+        while(True):
+            continue
+    except KeyboardInterrupt:
+        turn_on_wifi()
 
 def get_mac(ip):
     """
@@ -22,6 +53,9 @@ def process(packet):
                 # if they're different, definitely there is an attack
                 if real_mac != response_mac:
                     print(f"[!] You are under attack, REAL-MAC: {real_mac.upper()}, FAKE-MAC: {response_mac.upper()}")
+                    print("Turning off wifi in 3 sec")
+                    time.sleep(3)
+                    turn_off_wifi()
             except IndexError:
                 # unable to find the real mac
                 # may be a fake IP or firewall is blocking packets
